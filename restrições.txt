@@ -1,0 +1,9 @@
+RESTRIÇÕES
+
+- Não excluir aluno se existir matrícula ativa.
+
+- Ao cancelar matrícula avisar se existem mensalidades em aberto.
+
+- Não excluir matrícula caso o ano letivo não seja o vigente.
+
+- Não excluir ano letivo.

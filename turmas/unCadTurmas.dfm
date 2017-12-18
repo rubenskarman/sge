@@ -1,0 +1,259 @@
+object frmCadTurmas: TfrmCadTurmas
+  Left = 309
+  Top = 105
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Cadastro de Turmas'
+  ClientHeight = 530
+  ClientWidth = 712
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnKeyDown = FormKeyDown
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 712
+    Height = 73
+    Align = alTop
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 16
+      Top = 24
+      Width = 204
+      Height = 24
+      Caption = 'Cadastro de Turmas'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object DBNavigator1: TDBNavigator
+      Left = 319
+      Top = 19
+      Width = 364
+      Height = 33
+      DataSource = dsTurma
+      VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast, nbInsert, nbPost, nbCancel]
+      TabOrder = 0
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 73
+    Width = 712
+    Height = 457
+    Align = alClient
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    object Label2: TLabel
+      Left = 16
+      Top = 16
+      Width = 101
+      Height = 16
+      Caption = 'Nome da Turma'
+    end
+    object Label3: TLabel
+      Left = 225
+      Top = 16
+      Width = 107
+      Height = 16
+      Caption = 'Pertence a S'#233'rie'
+    end
+    object Label4: TLabel
+      Left = 432
+      Top = 16
+      Width = 38
+      Height = 16
+      Caption = 'Vagas'
+    end
+    object Label5: TLabel
+      Left = 512
+      Top = 16
+      Width = 36
+      Height = 16
+      Caption = 'Turno'
+    end
+    object DBGrid1: TDBGrid
+      Left = 16
+      Top = 72
+      Width = 673
+      Height = 369
+      Ctl3D = False
+      DataSource = dsTurma
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+      ParentCtl3D = False
+      TabOrder = 4
+      TitleFont.Charset = ANSI_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -13
+      TitleFont.Name = 'Arial'
+      TitleFont.Style = [fsBold]
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'nome'
+          Title.Caption = 'Nome da Turma'
+          Width = 187
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'nomeSerie'
+          Title.Caption = 'Pertence a S'#233'rie'
+          Width = 208
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'vagas'
+          Title.Caption = 'Vagas'
+          Width = 86
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'turno'
+          Title.Caption = 'Turno'
+          Visible = True
+        end>
+    end
+    object DBEdit1: TDBEdit
+      Left = 16
+      Top = 35
+      Width = 193
+      Height = 22
+      CharCase = ecUpperCase
+      Ctl3D = False
+      DataField = 'nome'
+      DataSource = dsTurma
+      ParentCtl3D = False
+      TabOrder = 0
+    end
+    object DBLookupComboBox1: TDBLookupComboBox
+      Left = 224
+      Top = 35
+      Width = 193
+      Height = 22
+      Ctl3D = False
+      DataField = 'idSerie'
+      DataSource = dsTurma
+      KeyField = 'id'
+      ListField = 'nome'
+      ListSource = dsSeries
+      ParentCtl3D = False
+      TabOrder = 1
+    end
+    object DBEdit2: TDBEdit
+      Left = 432
+      Top = 35
+      Width = 65
+      Height = 22
+      CharCase = ecUpperCase
+      Ctl3D = False
+      DataField = 'vagas'
+      DataSource = dsTurma
+      ParentCtl3D = False
+      TabOrder = 2
+    end
+    object DBComboBox1: TDBComboBox
+      Left = 512
+      Top = 34
+      Width = 177
+      Height = 24
+      Style = csDropDownList
+      CharCase = ecUpperCase
+      Ctl3D = False
+      DataField = 'turno'
+      DataSource = dsTurma
+      ItemHeight = 16
+      Items.Strings = (
+        'MANH'#195
+        'TARDE'
+        'NOITE')
+      ParentCtl3D = False
+      TabOrder = 3
+    end
+  end
+  object tbTurmas: TADOTable
+    Active = True
+    Connection = frmPrincipal.Conexao
+    CursorType = ctStatic
+    AfterInsert = tbTurmasAfterInsert
+    TableName = 'turma'
+    Left = 320
+    Top = 248
+    object tbTurmasid: TAutoIncField
+      FieldName = 'id'
+      ReadOnly = True
+    end
+    object tbTurmasidSerie: TIntegerField
+      FieldName = 'idSerie'
+    end
+    object tbTurmasnome: TWideStringField
+      FieldName = 'nome'
+      Size = 50
+    end
+    object tbTurmasvagas: TWordField
+      FieldName = 'vagas'
+    end
+    object tbTurmasturno: TWideStringField
+      FieldName = 'turno'
+    end
+    object tbTurmasnomeSerie: TWideStringField
+      FieldKind = fkLookup
+      FieldName = 'nomeSerie'
+      LookupDataSet = tbSeries
+      LookupKeyFields = 'id'
+      LookupResultField = 'nome'
+      KeyFields = 'idSerie'
+      Lookup = True
+    end
+  end
+  object dsTurma: TDataSource
+    DataSet = tbTurmas
+    Left = 352
+    Top = 248
+  end
+  object tbSeries: TADOTable
+    Active = True
+    Connection = frmPrincipal.Conexao
+    CursorType = ctStatic
+    TableName = 'serie'
+    Left = 336
+    Top = 73
+    object tbSeriesid: TAutoIncField
+      FieldName = 'id'
+      ReadOnly = True
+    end
+    object tbSeriesnome: TWideStringField
+      FieldName = 'nome'
+      Size = 50
+    end
+    object tbSeriesvalorMensalidade: TBCDField
+      FieldName = 'valorMensalidade'
+      Precision = 19
+    end
+  end
+  object dsSeries: TDataSource
+    DataSet = tbSeries
+    Left = 368
+    Top = 73
+  end
+end

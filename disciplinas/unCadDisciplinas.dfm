@@ -1,0 +1,131 @@
+object frmCadDisciplinas: TfrmCadDisciplinas
+  Left = 357
+  Top = 166
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Cadastro de Disciplinas'
+  ClientHeight = 445
+  ClientWidth = 410
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnKeyDown = FormKeyDown
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 410
+    Height = 73
+    Align = alTop
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 16
+      Top = 24
+      Width = 238
+      Height = 24
+      Caption = 'Cadastro de Disciplinas'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -21
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 73
+    Width = 410
+    Height = 372
+    Align = alClient
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    object Label2: TLabel
+      Left = 16
+      Top = 72
+      Width = 123
+      Height = 16
+      Caption = 'Nome da Disciplina'
+    end
+    object DBGrid1: TDBGrid
+      Left = 16
+      Top = 136
+      Width = 369
+      Height = 217
+      Ctl3D = False
+      DataSource = dsDisciplinas
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit]
+      ParentCtl3D = False
+      TabOrder = 2
+      TitleFont.Charset = ANSI_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -13
+      TitleFont.Name = 'Arial'
+      TitleFont.Style = [fsBold]
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'nome'
+          Title.Caption = 'Nome da Disciplina'
+          Width = 328
+          Visible = True
+        end>
+    end
+    object DBNavigator1: TDBNavigator
+      Left = 15
+      Top = 11
+      Width = 368
+      Height = 33
+      DataSource = dsDisciplinas
+      VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast, nbInsert, nbDelete, nbPost, nbCancel]
+      TabOrder = 0
+    end
+    object DBEdit1: TDBEdit
+      Left = 16
+      Top = 91
+      Width = 369
+      Height = 22
+      CharCase = ecUpperCase
+      Ctl3D = False
+      DataField = 'nome'
+      DataSource = dsDisciplinas
+      ParentCtl3D = False
+      TabOrder = 1
+    end
+  end
+  object tbDisciplinas: TADOTable
+    Active = True
+    Connection = frmPrincipal.Conexao
+    CursorType = ctStatic
+    AfterInsert = tbDisciplinasAfterInsert
+    TableName = 'disciplina'
+    Left = 176
+    Top = 240
+    object tbDisciplinasid: TAutoIncField
+      FieldName = 'id'
+      ReadOnly = True
+    end
+    object tbDisciplinasnome: TWideStringField
+      FieldName = 'nome'
+      Size = 100
+    end
+  end
+  object dsDisciplinas: TDataSource
+    DataSet = tbDisciplinas
+    Left = 208
+    Top = 240
+  end
+end

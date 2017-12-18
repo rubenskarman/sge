@@ -1,0 +1,86 @@
+unit unAutenticacao;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, jpeg, ExtCtrls, StdCtrls, Buttons, Mask, DBCtrls, DB, ADODB;
+
+type
+  TfrmAutenticacao = class(TForm)
+    Image1: TImage;
+    btoAutenticar: TBitBtn;
+    txtSenha: TMaskEdit;
+    tbUsuario: TADOTable;
+    dsUsuario: TDataSource;
+    tbUsuarioid: TAutoIncField;
+    tbUsuariosenha: TWideStringField;
+    cboUsuario: TDBLookupComboBox;
+    tbUsuariousuario: TWideStringField;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure btoAutenticarClick(Sender: TObject);
+    procedure txtSenhaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+    autenticado: Boolean;
+    tentativas: Byte;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmAutenticacao: TfrmAutenticacao;
+
+implementation
+
+{$R *.dfm}
+
+uses unPrincipal;
+
+procedure TfrmAutenticacao.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  if (autenticado = false) then
+    Application.Terminate;
+    
+  tbUsuario.Close;
+  Action:= caFree;
+end;
+
+procedure TfrmAutenticacao.FormShow(Sender: TObject);
+begin
+  tbUsuario.Open;
+  cboUsuario.SetFocus;
+end;
+
+procedure TfrmAutenticacao.btoAutenticarClick(Sender: TObject);
+begin
+  if (txtSenha.Text = tbUsuariosenha.Value) then
+    begin
+      autenticado:= True;
+      frmAutenticacao.Close;
+      frmPrincipal.Show;
+    end
+  else
+    begin
+      tentativas:= tentativas + 1;
+      Application.MessageBox('Usuário ou senha incorretos!','Erro',MB_ICONERROR+MB_OK);
+      txtSenha.SetFocus;
+
+      if (tentativas > 2) then
+        Application.Terminate;
+    end;
+end;
+
+procedure TfrmAutenticacao.txtSenhaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case key of
+    VK_RETURN:
+      btoAutenticar.Click;
+  end;
+end;
+
+end.

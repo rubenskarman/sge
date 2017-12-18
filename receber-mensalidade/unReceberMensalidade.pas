@@ -1,0 +1,226 @@
+unit unReceberMensalidade;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, DBCtrls, Grids, DBGrids, DB, ADODB, Menus;
+
+type
+  TfrmReceberMensalidade = class(TForm)
+    Panel1: TPanel;
+    Label1: TLabel;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    Edit2: TEdit;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    DBText1: TDBText;
+    DBText2: TDBText;
+    DBText3: TDBText;
+    sqlAluno: TADOQuery;
+    dsSqlAluno: TDataSource;
+    DBGrid2: TDBGrid;
+    Label7: TLabel;
+    sqlAlunoid: TAutoIncField;
+    sqlAlunonome: TWideStringField;
+    sqlAlunonomePai: TWideStringField;
+    sqlAlunonomeMae: TWideStringField;
+    sqlAlunonomeResp: TWideStringField;
+    sqlMens: TADOQuery;
+    dsMens: TDataSource;
+    sqlMensidAluno: TIntegerField;
+    sqlMensmes: TWordField;
+    sqlMensvalor: TBCDField;
+    sqlMenspago: TBooleanField;
+    sqlMensmesExtenso: TStringField;
+    sqlMensstatus: TStringField;
+    popupPagar: TPopupMenu;
+    Pagarestamensalidade1: TMenuItem;
+    sql: TADOCommand;
+    sqlMensid: TAutoIncField;
+    N1: TMenuItem;
+    Estornarestamensalidade1: TMenuItem;
+    cmd: TADOCommand;
+    sqlAnoLetivo: TADOQuery;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure sqlMensCalcFields(DataSet: TDataSet);
+    procedure Edit2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure sqlAlunoAfterScroll(DataSet: TDataSet);
+    procedure Pagarestamensalidade1Click(Sender: TObject);
+    procedure DBGrid2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure ConfirmaPagamento;
+    procedure DBGrid2DblClick(Sender: TObject);
+    procedure DBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure Estornarestamensalidade1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmReceberMensalidade: TfrmReceberMensalidade;
+
+implementation
+
+{$R *.dfm}
+
+uses unPrincipal, unConfirmarPagamento;
+
+procedure TfrmReceberMensalidade.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  Action:= caFree;
+end;
+
+procedure TfrmReceberMensalidade.FormKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  case key of
+    VK_ESCAPE:
+      Close;
+  end;
+end;
+
+procedure TfrmReceberMensalidade.sqlMensCalcFields(DataSet: TDataSet);
+begin
+  case sqlMensmes.Value of
+      1: sqlMensmesExtenso.Value:= 'JANEIRO';
+      2: sqlMensmesExtenso.Value:= 'FEVEREIRO';
+      3: sqlMensmesExtenso.Value:= 'MARÇO';
+      4: sqlMensmesExtenso.Value:= 'ABRIL';
+      5: sqlMensmesExtenso.Value:= 'MAIO';
+      6: sqlMensmesExtenso.Value:= 'JUNHO';
+      7: sqlMensmesExtenso.Value:= 'JULHO';
+      8: sqlMensmesExtenso.Value:= 'AGOSTO';
+      9: sqlMensmesExtenso.Value:= 'SETEMBRO';
+      10: sqlMensmesExtenso.Value:= 'OUTUBRO';
+      11: sqlMensmesExtenso.Value:= 'NOVEMBRO';
+      12: sqlMensmesExtenso.Value:= 'DEZEMBRO';
+  end;
+
+  if sqlMenspago.Value then
+    sqlMensstatus.Value:= 'SIM'
+  else
+    sqlMensstatus.Value:= 'NÃO';
+end;
+
+procedure TfrmReceberMensalidade.Edit2KeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  case key of
+    VK_RETURN:
+      begin
+        sqlAluno.Close;
+        sqlAluno.SQL.Clear;
+        sqlAluno.SQL.Add('SELECT aluno.id, aluno.nome, aluno.nomePai, aluno.nomeMae, aluno.nomeResp FROM aluno WHERE nome LIKE "%'+Edit2.Text+'%";');
+        sqlAluno.Open;
+
+        DBGrid1.SetFocus;
+      end;
+  end;
+end;
+
+procedure TfrmReceberMensalidade.sqlAlunoAfterScroll(DataSet: TDataSet);
+begin
+  sqlMens.Close;
+  sqlMens.SQL.Clear;
+  sqlMens.SQL.Add('SELECT matricula.idAluno, carneMensalidade.id, carneMensalidade.mes, carneMensalidade.valor, carneMensalidade.pago, anoLetivo.vigente ');
+  sqlMens.SQL.Add('FROM anoLetivo INNER JOIN (matricula INNER JOIN (carne INNER JOIN carneMensalidade ON carne.id = carneMensalidade.idCarne) ON matricula.id = carne.idMatricula) ON anoLetivo.id = matricula.idAnoLetivo ');
+  sqlMens.SQL.Add('WHERE (((matricula.idAluno)='+sqlAlunoid.AsString+') AND (anoLetivo.Vigente=TRUE));');
+
+  sqlMens.Open;
+end;
+
+procedure TfrmReceberMensalidade.Pagarestamensalidade1Click(
+  Sender: TObject);
+begin
+  ConfirmaPagamento;
+end;
+
+procedure TfrmReceberMensalidade.DBGrid2KeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  case Key of
+    VK_RETURN:
+     ConfirmaPagamento;
+  end;
+end;
+
+procedure TfrmReceberMensalidade.ConfirmaPagamento;
+begin
+    if not sqlMenspago.Value then
+      begin
+        Application.CreateForm(TfrmConfirmarPagamento, frmConfirmarPagamento);
+        frmConfirmarPagamento.origem:= 'semCodBarras';
+        frmConfirmarPagamento.lblAluno.Caption:= sqlAlunonome.Value;
+        frmConfirmarPagamento.lblMens.Caption:= sqlMensmesExtenso.AsString;
+        frmConfirmarPagamento.txtValor.Text:= FormatFloat('###,##0.00',sqlMensvalor.AsFloat);
+        frmConfirmarPagamento.ShowModal;
+      end
+    else
+      Application.MessageBox('Essa mensalidade já foi paga!','Atenção',MB_ICONWARNING+MB_OK);
+end;
+
+procedure TfrmReceberMensalidade.DBGrid2DblClick(Sender: TObject);
+begin
+  ConfirmaPagamento;
+end;
+
+procedure TfrmReceberMensalidade.DBGrid2DrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if (sqlMenspago.Value) then
+    DBGrid2.Canvas.Brush.Color:= $00CEFFC6
+  else
+    DBGrid2.Canvas.Brush.Color:= $00D5D5FF;
+
+  TDbGrid(Sender).Canvas.font.Color:= clBlack;
+    if gdSelected in State then
+      with (Sender as TDBGrid).Canvas do
+        begin
+          Brush.Color := $00FF8000;
+          Font.Color:= clWhite;
+          FillRect(Rect);
+          Font.Style := [fsbold]
+        end;
+  
+  TDbGrid(Sender).DefaultDrawDataCell(Rect, TDbGrid(Sender).columns[datacol].field, State);
+end;
+
+procedure TfrmReceberMensalidade.Estornarestamensalidade1Click(
+  Sender: TObject);
+  var
+    idAnoLetivo: String;
+begin
+  if Application.MessageBox(PChar('Deseja estornar mensalidade '+sqlMensmesExtenso.Value+'?'),'Confirmação',MB_ICONQUESTION+MB_YESNO) = idYes then
+    begin
+      sqlAnoLetivo.Close;
+      sqlAnoLetivo.SQL.Clear;
+      sqlAnoLetivo.SQL.Add('SELECT vigente, id, ano FROM anoLetivo WHERE ((vigente=True));');
+      sqlAnoLetivo.Open;
+
+      idAnoLetivo:= sqlAnoLetivo.FieldByName('id').AsString;
+      
+      cmd.CommandText:= '';
+      cmd.CommandText:= 'UPDATE carneMensalidade SET pago=FALSE WHERE id='+sqlMensid.AsString;
+      cmd.Execute;
+
+      cmd.CommandText:= '';
+      cmd.CommandText:= 'DELETE FROM caixa WHERE idAluno="'+sqlMensidAluno.AsString+'" AND mes="'+sqlMensmes.AsString+'" AND idAnoLetivo='+idAnoLetivo+'';
+      cmd.Execute;
+
+      Application.MessageBox('ESTORNO realizado com sucesso!','Confirmação',MB_ICONINFORMATION+MB_OK);
+    end;
+end;
+
+end.
