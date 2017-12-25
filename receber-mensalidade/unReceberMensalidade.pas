@@ -45,6 +45,7 @@ type
     Estornarestamensalidade1: TMenuItem;
     cmd: TADOCommand;
     sqlAnoLetivo: TADOQuery;
+    sqlMensdataPag: TWideStringField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -133,7 +134,7 @@ procedure TfrmReceberMensalidade.sqlAlunoAfterScroll(DataSet: TDataSet);
 begin
   sqlMens.Close;
   sqlMens.SQL.Clear;
-  sqlMens.SQL.Add('SELECT matricula.idAluno, carneMensalidade.id, carneMensalidade.mes, carneMensalidade.valor, carneMensalidade.pago, anoLetivo.vigente ');
+  sqlMens.SQL.Add('SELECT matricula.idAluno, carneMensalidade.id, carneMensalidade.mes, carneMensalidade.valor, carneMensalidade.pago, FORMAT(carneMensalidade.dataPagamento,"dd/mm/yyyy") as dataPag, anoLetivo.vigente ');
   sqlMens.SQL.Add('FROM anoLetivo INNER JOIN (matricula INNER JOIN (carne INNER JOIN carneMensalidade ON carne.id = carneMensalidade.idCarne) ON matricula.id = carne.idMatricula) ON anoLetivo.id = matricula.idAnoLetivo ');
   sqlMens.SQL.Add('WHERE (((matricula.idAluno)='+sqlAlunoid.AsString+') AND (anoLetivo.Vigente=TRUE));');
 

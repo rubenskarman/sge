@@ -5,7 +5,7 @@ object frmReceberMensalidade: TfrmReceberMensalidade
   BorderStyle = bsSingle
   Caption = 'Receber Mensalidade sem C'#243'digo de Barras'
   ClientHeight = 442
-  ClientWidth = 748
+  ClientWidth = 794
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmReceberMensalidade: TfrmReceberMensalidade
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 748
+    Width = 794
     Height = 73
     Align = alTop
     TabOrder = 0
@@ -43,7 +43,7 @@ object frmReceberMensalidade: TfrmReceberMensalidade
   object Panel2: TPanel
     Left = 0
     Top = 73
-    Width = 748
+    Width = 794
     Height = 369
     Align = alClient
     TabOrder = 1
@@ -145,7 +145,7 @@ object frmReceberMensalidade: TfrmReceberMensalidade
       ParentFont = False
     end
     object Label7: TLabel
-      Left = 376
+      Left = 360
       Top = 16
       Width = 87
       Height = 16
@@ -208,9 +208,9 @@ object frmReceberMensalidade: TfrmReceberMensalidade
       OnKeyDown = Edit2KeyDown
     end
     object DBGrid2: TDBGrid
-      Left = 376
+      Left = 360
       Top = 36
-      Width = 356
+      Width = 417
       Height = 317
       Ctl3D = False
       DataSource = dsMens
@@ -247,7 +247,7 @@ object frmReceberMensalidade: TfrmReceberMensalidade
           Title.Font.Height = -13
           Title.Font.Name = 'Arial'
           Title.Font.Style = [fsBold]
-          Width = 170
+          Width = 138
           Visible = True
         end
         item
@@ -284,6 +284,18 @@ object frmReceberMensalidade: TfrmReceberMensalidade
           Title.Font.Name = 'Arial'
           Title.Font.Style = [fsBold]
           Width = 51
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'dataPag'
+          Title.Caption = 'Data'
+          Title.Font.Charset = DEFAULT_CHARSET
+          Title.Font.Color = clWindowText
+          Title.Font.Height = -13
+          Title.Font.Name = 'Arial'
+          Title.Font.Style = [fsBold]
+          Width = 102
           Visible = True
         end>
     end
@@ -332,7 +344,8 @@ object frmReceberMensalidade: TfrmReceberMensalidade
     SQL.Strings = (
       
         'SELECT matricula.idAluno, carneMensalidade.id, carneMensalidade.' +
-        'mes, carneMensalidade.valor, carneMensalidade.pago'
+        'mes, carneMensalidade.valor, carneMensalidade.pago, FORMAT(carne' +
+        'Mensalidade.dataPagamento,"Long Date") as dataPag'
       
         'FROM (matricula INNER JOIN carne ON matricula.id = carne.idMatri' +
         'cula) INNER JOIN carneMensalidade ON carne.id = carneMensalidade' +
@@ -369,6 +382,11 @@ object frmReceberMensalidade: TfrmReceberMensalidade
     object sqlMensid: TAutoIncField
       FieldName = 'id'
       ReadOnly = True
+    end
+    object sqlMensdataPag: TWideStringField
+      FieldName = 'dataPag'
+      ReadOnly = True
+      Size = 255
     end
   end
   object dsMens: TDataSource

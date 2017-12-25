@@ -211,6 +211,8 @@ type
     procedure txtBuscaAlunoChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure tbAlunosBeforeDelete(DataSet: TDataSet);
+    procedure txtBuscaAlunoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -249,7 +251,8 @@ end;
 
 procedure TfrmCadAlunos.txtBuscaAlunoChange(Sender: TObject);
 begin
-  tbAlunos.Locate('nome',txtBuscaAluno.Text,[loPartialKey]);
+  if not tbAlunos.Eof or not tbAlunos.Bof then
+    tbAlunos.Locate('nome',txtBuscaAluno.Text,[loPartialKey]);
 end;
 
 procedure TfrmCadAlunos.FormShow(Sender: TObject);
@@ -271,6 +274,30 @@ begin
       Abort;
     end;
 }
+end;
+
+procedure TfrmCadAlunos.txtBuscaAlunoKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  case key of
+    VK_RETURN:
+      begin
+        if (txtBuscaAluno.Text <> '') then
+          begin
+            tbAlunos.Close;
+            tbAlunos.Filtered := False;
+            tbAlunos.Filter:= 'nome LIKE '+QuotedStr(txtBuscaAluno.Text + '*');
+            tbAlunos.Filtered:= True;
+            tbAlunos.Open;
+          end
+        else
+          begin
+            tbAlunos.Close;
+            tbAlunos.Filtered := False;
+            tbAlunos.Open;
+          end;
+      end;
+  end;
 end;
 
 end.

@@ -104,6 +104,7 @@ object frmCadAlunos: TfrmCadAlunos
       ParentCtl3D = False
       TabOrder = 1
       OnChange = txtBuscaAlunoChange
+      OnKeyDown = txtBuscaAlunoKeyDown
     end
     object PageControl1: TPageControl
       Left = 0
@@ -1608,6 +1609,7 @@ object frmCadAlunos: TfrmCadAlunos
     CursorType = ctStatic
     AfterInsert = tbAlunosAfterInsert
     BeforeDelete = tbAlunosBeforeDelete
+    IndexFieldNames = 'nome ASC'
     TableName = 'aluno'
     Left = 520
     Top = 16

@@ -163,7 +163,7 @@ begin
       sqlGeral.SQL.Add(' WHERE (((carneMensalidade.id)='+codMens+'));');
       sqlGeral.Open;
 
-      ShowMessage(codMens);
+      //ShowMessage(codMens);
 
       if sqlGeral.FieldByName('pago').AsBoolean then
         begin
