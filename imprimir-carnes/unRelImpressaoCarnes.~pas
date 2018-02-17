@@ -51,6 +51,7 @@ type
     sqlMasterturmaid: TAutoIncField;
     sqlMastercarneMensalidadeid: TAutoIncField;
     sqlMasterdiaPagamento: TDateTimeField;
+    QRLabel19: TQRLabel;
     procedure QRBand1BeforePrint(Sender: TQRCustomBand;
       var PrintBand: Boolean);
   private

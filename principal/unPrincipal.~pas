@@ -177,7 +177,7 @@ begin
           origem:= 'codBarras';
           idMensalidade:= codMens;
           idAnoLetivo:= sqlGeral.FieldByName('idAno').AsString;
-          data:= '#'+DateToStr(Date())+'#';
+          data:= '#'+FormatDateTime('mm/dd/YYYY',Date())+'#';
           hora:= '"'+TimeToStr(Time())+'"';
           valor:= FormatFloat('###,##0.00',sqlGeral.FieldByName('valor').Asfloat);
           descricao:= '"Pagto Mens - '+sqlGeral.FieldByName('nomeAluno').AsString+' - MÊS: '+sqlGeral.FieldByName('mes').AsString+' de '+sqlGeral.FieldByName('ano').AsString+'"';

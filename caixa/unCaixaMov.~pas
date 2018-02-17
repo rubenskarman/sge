@@ -50,6 +50,7 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
       procedure CalcularTotais;
     procedure BitBtn1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -83,13 +84,13 @@ else
     sqlCaixa.SQL.Clear;
 
     if opcTipo.ItemIndex = 0 then
-      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (tipo="C") AND (data BETWEEN #'+IntToStr(dia1)+'/'+IntToStr(mes1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(dia2)+'/'+IntToStr(mes2)+'/'+IntToStr(ano2)+'#) ORDER BY data DESC, hora DESC');
+      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (tipo="C") AND (data BETWEEN #'+IntToStr(mes1)+'/'+IntToStr(dia1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(mes2)+'/'+IntToStr(dia2)+'/'+IntToStr(ano2)+'#) ORDER BY data DESC, hora DESC');
 
     if opcTipo.ItemIndex = 1 then
-      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (tipo="D") AND (data BETWEEN #'+IntToStr(dia1)+'/'+IntToStr(mes1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(dia2)+'/'+IntToStr(mes2)+'/'+IntToStr(ano2)+'#) ORDER BY data DESC, hora DESC');
+      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (tipo="D") AND (data BETWEEN #'+IntToStr(mes1)+'/'+IntToStr(dia1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(mes2)+'/'+IntToStr(dia2)+'/'+IntToStr(ano2)+'#) ORDER BY data DESC, hora DESC');
 
     if opcTipo.ItemIndex = 2 then
-      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (data BETWEEN #'+IntToStr(dia1)+'/'+IntToStr(mes1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(dia2)+'/'+IntToStr(mes2)+'/'+IntToStr(ano2)+'#) ORDER BY data DESC, hora DESC');
+      sqlCaixa.SQL.Add('SELECT * FROM caixa WHERE (data BETWEEN #'+IntToStr(mes1)+'/'+IntToStr(dia1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(mes2)+'/'+IntToStr(mes2)+'/'+IntToStr(dia2)+'#) ORDER BY data DESC, hora DESC');
 
     sqlCaixa.Open;
 
@@ -169,14 +170,14 @@ begin
 
   sqlTotais.Close;
   sqlTotais.SQL.Clear;
-  sqlTotais.SQL.Add('SELECT SUM(valor) AS totalEntradas FROM caixa WHERE (tipo="C") AND (data BETWEEN #'+IntToStr(dia1)+'/'+IntToStr(mes1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(dia2)+'/'+IntToStr(mes2)+'/'+IntToStr(ano2)+'#)');
+  sqlTotais.SQL.Add('SELECT SUM(valor) AS totalEntradas FROM caixa WHERE (tipo="C") AND (data BETWEEN #'+IntToStr(mes1)+'/'+IntToStr(dia1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(mes2)+'/'+IntToStr(dia2)+'/'+IntToStr(ano2)+'#)');
   sqlTotais.Open;
 
   entradas:= sqlTotais.FieldByName('totalEntradas').AsFloat;
 
   sqlTotais.Close;
   sqlTotais.SQL.Clear;
-  sqlTotais.SQL.Add('SELECT SUM(valor) AS totalSaidas FROM caixa WHERE (tipo="D") AND (data BETWEEN #'+IntToStr(dia1)+'/'+IntToStr(mes1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(dia2)+'/'+IntToStr(mes2)+'/'+IntToStr(ano2)+'#)');
+  sqlTotais.SQL.Add('SELECT SUM(valor) AS totalSaidas FROM caixa WHERE (tipo="D") AND (data BETWEEN #'+IntToStr(mes1)+'/'+IntToStr(dia1)+'/'+IntToStr(ano1)+'# AND #'+IntToStr(mes2)+'/'+IntToStr(dia2)+'/'+IntToStr(ano2)+'#)');
   sqlTotais.Open;
 
   saidas:= sqlTotais.FieldByName('totalSaidas').AsFloat;
@@ -184,7 +185,7 @@ begin
   saldo:= entradas - saidas;
 
   lblTotalEntrada.Caption:= FormatFloat('R$ ###,##0.00',entradas);
-  lblTotalSaida.Caption:= '-'FormatFloat('R$ ###,##0.00',saidas);
+  lblTotalSaida.Caption:= '-'+FormatFloat('R$ ###,##0.00',saidas);
   lblSaldo.Caption:= FormatFloat('R$ ###,##0.00',saldo);
 end;
 
@@ -207,6 +208,12 @@ begin
     relCaixaMov.Preview;
     relCaixaMov.Free;
     relCaixaMov:= nil;
+end;
+
+procedure TfrmCaixaMov.FormShow(Sender: TObject);
+begin
+  txtDataInicial.Date:= Date;
+  txtDataFinal.Date:= Date;
 end;
 
 end.

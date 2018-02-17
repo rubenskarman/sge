@@ -231,7 +231,7 @@ begin
       if sql.RecordCount <= 0 then
         begin
           cmd.CommandText:= '';
-          cmd.CommandText:= 'INSERT INTO matricula (idAnoLetivo, idTurma, idAluno, dataMatricula) VALUES ('+anoLetivo+','+tbTurmaid.AsString+','+sqlAlunoid.AsString+',#'+FormatDateTime('dd/mm/YYYY',Date())+'#);';
+          cmd.CommandText:= 'INSERT INTO matricula (idAnoLetivo, idTurma, idAluno, dataMatricula) VALUES ('+anoLetivo+','+tbTurmaid.AsString+','+sqlAlunoid.AsString+',#'+FormatDateTime('mm/dd/YYYY',Date())+'#);';
           cmd.Execute;
 
           cmd.CommandText:= '';

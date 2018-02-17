@@ -59,7 +59,7 @@ begin
   if (origem = 'codBarras') then
     begin
       cmd.CommandText:= '';
-      cmd.CommandText:= 'UPDATE carneMensalidade SET pago=TRUE, dataPagamento=#'+data+'# WHERE id='+idMensalidade;
+      cmd.CommandText:= 'UPDATE carneMensalidade SET pago=TRUE, dataPagamento='+data+' WHERE id='+idMensalidade;
       cmd.Execute;
 
       cmd.CommandText:= '';
@@ -82,7 +82,7 @@ begin
       sql.Open;
 
       idAnoLetivo:= sql.FieldByName('id').AsString;
-      data:= ''+DateToStr(Date())+'';
+      data:= '#'+FormatDateTime('mm/dd/YYYY',Date())+'#';
       hora:= '"'+TimeToStr(Time())+'"';
       valor:= '"'+txtValor.Text+'"';
       descricao:= '"Pagto Mens - '+lblAluno.Caption+' - MÊS: '+frmReceberMensalidade.sqlMensmes.AsString+' de '+sql.FieldByName('ano').AsString+'"';
